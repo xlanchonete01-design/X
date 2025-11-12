@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Pedidos</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="login-container">
+        <div class="login-box">
+            <h1>Acesso ao Painel</h1>
+            <input type="email" id="login-email" placeholder="Seu e-mail" required>
+            <input type="password" id="login-password" placeholder="Sua senha" required>
+            <button id="login-button">Entrar</button>
+            <p id="login-error-message" class="error-message"></p>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="hidden">
+        <header class="admin-header">
+            <div class="header-logo">
+                <i class="fas fa-receipt"></i>
+                <h1>Painel de Pedidos</h1>
+            </div>
+            
+            <div class="header-actions">
+                <div class="store-toggle-container">
+                    <span id="store-status-text">Carregando...</span>
+                    <label class="switch">
+                        <input type="checkbox" id="store-status-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <button id="connect-printer-btn" title="Conectar Impressora Bluetooth"><i class="fas fa-print"></i></button>
+                
+                <div class="user-menu-container">
+                    <button id="user-menu-btn" class="user-menu-btn"><i class="fas fa-user-circle"></i></button>
+                    <div id="user-dropdown" class="user-dropdown hidden">
+                        <div id="user-email-display"></div>
+                        <button id="logout-button"><i class="fas fa-sign-out-alt"></i> Sair</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main id="orders-dashboard" class="orders-dashboard">
+            <div class="status-category" id="category-new">
+                <div class="category-header new"><i class="fas fa-bell"></i><h2>Novos Pedidos (<span id="new-orders-count">0</span>)</h2></div>
+                <div class="orders-container" id="container-new"></div>
+            </div>
+            <div class="status-category" id="category-prep">
+                <div class="category-header prep"><i class="fas fa-fire-burner"></i><h2>Em Preparo (<span id="prep-orders-count">0</span>)</h2></div>
+                <div class="orders-container" id="container-prep"></div>
+            </div>
+            <div class="status-category" id="category-ready">
+                <div class="category-header ready"><i class="fas fa-check-circle"></i><h2>Prontos (<span id="ready-orders-count">0</span>)</h2></div>
+                <div class="orders-container" id="container-ready"></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="print-preview-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Pré-visualização do Cupom</h3><button id="close-preview-btn" class="close-btn">&times;</button></div>
+            <div class="modal-body"><pre id="print-preview-content"></pre></div>
+            <div class="modal-footer"><button id="confirm-print-btn" class="action-btn btn-print"><i class="fas fa-print"></i> Imprimir</button></div>
+        </div>
+    </div>
+
+    <!-- ▼▼▼ SCRIPTS DO FIREBASE ATUALIZADOS PARA A VERSÃO 8 ▼▼▼ -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <!-- O firebase-init.js não é mais necessário aqui -->
+    <script src="admin.js"></script>
+
+</body>
+</html>
+<!-- FIM DO CÓDIGO -->

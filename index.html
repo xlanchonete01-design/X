@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carregando Cardápio...</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="store-profile-header">
+        <div id="store-cover-image" class="store-cover-image"></div>
+        <div class="store-info-card">
+            <button id="share-menu-btn" class="share-icon-btn" aria-label="Compartilhar Cardápio">
+                <i class="fas fa-share-alt"></i>
+            </button>
+            
+            <img id="store-logo-image" src="" alt="Logo da Loja" class="store-logo-image">
+            <h1 id="store-name-title" class="store-name-title"></h1>
+            <p id="store-subtitle" class="store-subtitle"></p>
+            <div id="store-status" class="store-status">
+                <span id="status-indicator" class="status-indicator"></span>
+                <span id="status-text"></span>
+            </div>
+        </div>
+    </header>
+    <div id="main-content">
+        <div id="sticky-nav-container">
+            <nav id="category-nav" class="category-nav"></nav>
+        </div>
+        <main class="container" id="menu-container">
+            <div class="loading-spinner"></div>
+        </main>
+        <footer class="icon-footer">
+            <button id="location-icon" class="icon-btn" aria-label="Endereço e Horários"><i class="fas fa-map-marker-alt"></i></button>
+            <a id="instagram-icon" href="#" target="_blank" class="icon-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a id="facebook-icon" href="#" target="_blank" class="icon-btn" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            <a id="whatsapp-icon" href="#" target="_blank" class="icon-btn" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </footer>
+        <footer class="text-footer">
+            <p id="copyright-text"></p>
+            <p class="developer-credit">Desenvolvido por <a href="https://manus.ai" target="_blank">AkarioBR</a></p>
+        </footer>
+    </div>
+    <div id="info-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Informações</h3><button id="close-info-modal" class="close-btn">&times;</button></div>
+            <div id="info-modal-body" class="modal-body"></div>
+        </div>
+    </div>
+    <div id="addon-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header"><h3 id="addon-modal-title"></h3><button id="close-addon-modal" class="close-btn">&times;</button></div>
+            <div id="addon-modal-body" class="modal-body"></div>
+        </div>
+    </div>
+    <div id="cart-bar" class="cart-bar hidden">
+        <div class="cart-bar-info">
+            <span id="cart-bar-count">0 itens</span>
+            <span id="cart-bar-total">R$ 0,00</span>
+        </div>
+        <button id="view-cart-btn" class="btn-view-cart">Ver Pedido <i class="fas fa-arrow-right"></i></button>
+    </div>
+    <div id="cart-page" class="cart-page hidden">
+        <div class="cart-header">
+            <button id="close-cart-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Voltar</button>
+            <h2>Seu Pedido</h2>
+        </div>
+        <div class="cart-body">
+            <div id="cart-items-container"></div>
+            <div class="cart-summary">
+                <h3>Resumo</h3>
+                <div class="summary-row"><span>Subtotal</span><span id="cart-subtotal-price">R$ 0,00</span></div>
+                <div class="summary-row" id="delivery-fee-row"><span>Taxa de Entrega</span><span id="cart-delivery-fee">R$ 0,00</span></div>
+                <div class="summary-row total-row"><span>Total</span><span id="cart-total-price">R$ 0,00</span></div>
+            </div>
+            <div class="checkout-form">
+                <h3>Complete seus Dados</h3>
+                <input type="text" id="client-name" placeholder="* Seu Nome" class="input-field" required>
+                <select id="delivery-option" class="input-field">
+                    <option value="delivery">Receber em casa (Delivery)</option>
+                    <option value="pickup">Retirar no local</option>
+                </select>
+                <div id="address-fields">
+                    <input type="text" id="client-address" placeholder="* Endereço Completo (Rua, N°, Bairro)" class="input-field">
+                </div>
+                <select id="payment-method" class="input-field" required>
+                    <option value="" disabled selected>* Forma de Pagamento</option>
+                    <option value="dinheiro">Dinheiro</option>
+                    <option value="pix">PIX</option>
+                    <option value="cartao">Cartão</option>
+                </select>
+                <div id="change-field" class="hidden"><input type="text" id="change-for" placeholder="Precisa de troco para quanto?" class="input-field"></div>
+                <div id="pix-info" class="hidden">
+                    <p>Faça o pagamento e envie o comprovante no WhatsApp.</p>
+                    <div class="pix-key-container">
+                        <strong id="pix-key-display"></strong>
+                        <button id="copy-pix-key-btn" class="btn-copy-pix" aria-label="Copiar Chave PIX"><i class="fas fa-copy"></i> Copiar</button>
+                    </div>
+                </div>
+                <textarea id="order-observations" class="input-field" placeholder="Observações (ex: sem cebola, ponto da carne...)"></textarea>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <button id="finalize-order-btn" type="button" class="btn-finalize"><i class="fab fa-whatsapp"></i> Enviar Pedido</button>
+        </div>
+    </div>
+
+    <!-- ▼▼▼ SCRIPTS DO FIREBASE ATUALIZADOS PARA A VERSÃO 8 ▼▼▼ -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <!-- Scripts da Aplicação -->
+    <!-- O firebase-init.js não é mais necessário aqui -->
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+
+</body>
+</html>
+<!-- FIM DO CÓDIGO -->

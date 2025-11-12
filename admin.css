@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+body { font-family: 'Poppins', sans-serif; background-color: #f7f7f7; margin: 0; color: #333; }
+.hidden { display: none !important; }
+
+/* --- LOGIN --- */
+#login-container { display: flex; justify-content: center; align-items: center; height: 100vh; }
+.login-box { width: 90%; max-width: 380px; padding: 30px; background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px; text-align: center; }
+.login-box h1 { font-weight: 500; color: #333; margin-bottom: 25px; }
+input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+button { width: 100%; padding: 14px; border: none; background-color: #007bff; color: white; font-size: 18px; font-weight: 500; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; }
+button:hover { background-color: #0056b3; }
+.error-message { color: #e74c3c; font-size: 14px; margin-top: 15px; text-align: left; }
+
+/* --- CABEÇALHO DO PAINEL --- */
+.admin-header { display: flex; justify-content: space-between; align-items: center; background-color: #ffffff; padding: 12px 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+.header-logo { display: flex; align-items: center; gap: 12px; }
+.header-logo i { font-size: 24px; color: #007bff; }
+.header-logo h1 { font-size: 22px; font-weight: 500; margin: 0; }
+.header-actions { display: flex; align-items: center; gap: 20px; /* Aumentei o gap para espaçar melhor */ }
+
+/* --- MENU DE USUÁRIO --- */
+.user-menu-container { position: relative; }
+.user-menu-btn { background: none; border: none; font-size: 26px; color: #555; cursor: pointer; padding: 5px; }
+.user-dropdown { position: absolute; top: 120%; right: 0; background: white; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); z-index: 10; width: 220px; overflow: hidden; }
+.user-dropdown #user-email-display { padding: 15px; font-size: 14px; color: #333; border-bottom: 1px solid #f0f0f0; word-break: break-all; }
+.user-dropdown #logout-button { background: none; border: none; width: 100%; text-align: left; padding: 12px 15px; font-size: 15px; color: #e74c3c; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+.user-dropdown #logout-button:hover { background-color: #f7f7f7; }
+
+#connect-printer-btn { width: auto; background: none; border: none; font-size: 20px; color: #555; cursor: pointer; padding: 5px; transition: color 0.2s; }
+#connect-printer-btn:hover { color: #007bff; }
+#connect-printer-btn.connected { color: #28a745; }
+
+/* --- CORPO DO PAINEL E CARDS (sem mudanças) --- */
+.orders-dashboard { padding: 20px; }
+.status-category { margin-bottom: 20px; }
+.category-header { display: flex; align-items: center; padding: 20px; border-radius: 12px; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.category-header i { font-size: 24px; margin-right: 15px; }
+.category-header h2 { margin: 0; font-size: 20px; font-weight: 500; }
+.category-header.new { background-color: #c82333; }
+.category-header.prep { background-color: #e0a800; }
+.category-header.ready { background-color: #218838; }
+.orders-container { padding: 10px 0; }
+.empty-column-message { text-align: center; color: #8a8d91; margin-top: 20px; font-size: 14px; }
+.order-card { background: white; border-radius: 8px; padding: 15px; margin: 10px 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 5px solid; }
+.order-card.status-new { border-left-color: #c82333; }
+.order-card.status-prep { border-left-color: #e0a800; }
+.order-card.status-ready { border-left-color: #218838; }
+.order-card h4 { margin: 0 0 10px 0; font-size: 18px; font-weight: 700; }
+.order-card p { margin: 4px 0; font-size: 14px; color: #555; }
+.order-card hr { border: none; border-top: 1px solid #f0f0f0; margin: 10px 0; }
+.order-card .total { font-weight: 700; margin-top: 10px; font-size: 16px; color: #333; }
+.whatsapp-link { color: #25D366; text-decoration: none; font-weight: bold; }
+.whatsapp-link i { margin-right: 5px; }
+.card-actions { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+.action-btn { flex-grow: 1; padding: 10px; font-size: 14px; font-weight: 500; border-radius: 6px; border: none; cursor: pointer; transition: opacity 0.2s; }
+.action-btn:hover { opacity: 0.8; }
+.btn-prep { background-color: #e0a800; color: white; }
+.btn-ready { background-color: #218838; color: white; }
+.btn-print { background-color: #007bff; color: white; }
+.btn-delete { background-color: #6c757d; color: white; }
+
+/* --- MODAL DE PRÉ-VISUALIZAÇÃO (sem mudanças) --- */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+.modal-header h3 { margin: 0; font-size: 18px; }
+.close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #888; }
+.modal-body pre { background: #f4f4f4; border: 1px solid #ddd; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 12px; white-space: pre-wrap; word-wrap: break-word; max-height: 40vh; overflow-y: auto; }
+.modal-footer { margin-top: 20px; text-align: right; }
+.modal-footer .btn-print { width: auto; flex-grow: 0; }
+.modal-footer .btn-print i { margin-right: 8px; }
+
+/* ▼▼▼ ESTILOS PARA O INTERRUPTOR DE ABRIR/FECHAR LOJA ▼▼▼ */
+.store-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+#store-status-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    transition: color 0.3s ease;
+}
+#store-status-text.open {
+    color: #28a745; /* Verde para "Aberta" */
+}
+#store-status-text.closed {
+    color: #c82333; /* Vermelho para "Fechada" */
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px; /* Largura do interruptor */
+    height: 28px; /* Altura do interruptor */
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px; /* Tamanho do círculo */
+    width: 20px;  /* Tamanho do círculo */
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+input:checked + .slider {
+    background-color: #28a745; /* Cor quando ligado (Aberta) */
+}
+input:focus + .slider {
+    box-shadow: 0 0 1px #28a745;
+}
+input:checked + .slider:before {
+    transform: translateX(22px); /* Distância que o círculo se move */
+}
+.slider.round {
+    border-radius: 34px;
+}
+.slider.round:before {
+    border-radius: 50%;
+}
+/* FIM DO CÓDIGO */
