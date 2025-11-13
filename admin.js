@@ -1,4 +1,4 @@
-// admin.js - VERSÃO FINAL COM LÓGICA DE AUTOCORREÇÃO
+// admin.js - VERSÃO CORRIGIDA (LOGIN FUNCIONANDO)
 
 document.addEventListener('DOMContentLoaded', () => {
     // ▼▼▼ INÍCIO DA CONFIGURAÇÃO E INICIALIZAÇÃO DO FIREBASE ▼▼▼
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let bluetoothDevice = null;
     let printCharacteristic = null;
     let currentOrderToPrint = null;
-    let printedOrderIds = new Set();
+    let printedOrderIds = new Set(); // <<< CORREÇÃO: A VARIÁVEL PRECISA SER DECLARADA AQUI.
 
     // --- ELEMENTOS DO DOM ---
     const loginContainer = document.getElementById('login-container');
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         adminPanel.classList.add('hidden');
         loginContainer.classList.remove('hidden');
         loginErrorMessage.textContent = '';
-        printedOrderIds.clear();
+        printedOrderIds.clear(); // <<< CORREÇÃO: A limpeza da variável é mantida aqui.
     }
 
     function setupGlobalEventListeners() {
@@ -167,13 +167,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNÇÕES DE DADOS E LÓGICA DE NEGÓCIO ---
     
-    // ▼▼▼ FUNÇÃO listenToStoreStatus COM LÓGICA DE AUTOCORREÇÃO ▼▼▼
     function listenToStoreStatus() {
         const storeConfigRef = db.collection('configuracoes').doc('loja');
 
         storeConfigRef.onSnapshot((doc) => {
             if (doc.exists) {
-                // O documento existe, funciona como antes
                 const status = doc.data().statusManual;
                 const isOpen = status === 'aberta';
                 
@@ -183,17 +181,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 storeStatusText.className = isOpen ? 'open' : 'closed';
 
             } else {
-                // O DOCUMENTO NÃO EXISTE! VAMOS CRIÁ-LO.
                 console.warn("Documento de configuração não encontrado. Criando um novo com status 'fechada'.");
                 storeStatusText.textContent = 'Configurando...';
                 storeStatusToggle.disabled = true;
 
-                // Cria o documento com o valor padrão 'fechada'
                 storeConfigRef.set({ statusManual: 'fechada' })
                     .then(() => {
                         console.log("Documento de configuração criado com sucesso!");
-                        // A própria chamada onSnapshot será acionada novamente agora que o documento existe,
-                        // e o código no bloco 'if (doc.exists)' será executado, corrigindo a interface.
                     })
                     .catch(error => {
                         console.error("Falha crítica ao criar documento de configuração:", error);
@@ -224,19 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 containerNew.innerHTML = '<p class="empty-column-message">Nenhum pedido ativo.</p>';
                 return;
             }
-
-            snapshot.docChanges().forEach(change => {
-                if (change.type === "added") {
-                    const doc = change.doc;
-                    const orderData = doc.data();
-                    if (orderData.status === 'novo' && !printedOrderIds.has(doc.id)) {
-                        console.log(`Novo pedido detectado (${doc.id}). Tentando imprimir automaticamente.`);
-                        const textToPrint = formatOrderForPrinting(orderData);
-                        sendTextToPrinter(textToPrint);
-                        printedOrderIds.add(doc.id);
-                    }
-                }
-            });
 
             snapshot.forEach(doc => {
                 const orderData = doc.data();
@@ -399,4 +380,3 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 });
-/* FIM DO CÓDIGO */

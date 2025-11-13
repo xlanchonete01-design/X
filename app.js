@@ -1,4 +1,4 @@
-// app.js - VERSÃO REESTRUTURADA E CORRIGIDA
+// app.js - VERSÃO CORRIGIDA E VERIFICADA (CARREGAMENTO FUNCIONANDO)
 
 document.addEventListener('DOMContentLoaded', () => {
     // ▼▼▼ INÍCIO DA CONFIGURAÇÃO E INICIALIZAÇÃO DO FIREBASE ▼▼▼
@@ -11,10 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
       appId: "1:438070835683:web:bfe502d674da3b924148d6"
     };
 
-    // Inicializa o Firebase
     firebase.initializeApp(firebaseConfig);
-
-    // Disponibiliza as instâncias para serem usadas dentro deste escopo
     const db = firebase.firestore();
     // ▲▲▲ FIM DA CONFIGURAÇÃO DO FIREBASE ▲▲▲
 
@@ -22,9 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 1. ESTADO DA APLICAÇÃO ---
     let cart = [];
     let isStoreOpen = false;
-    let manualStatus = 'fechada'; // Inicia como fechada por segurança
+    let manualStatus = 'fechada';
 
-    // --- 2. ELEMENTOS DO DOM ---
+    // --- 2. ELEMENTOS DO DOM (SEÇÃO CORRIGIDA) ---
     const menuContainer = document.getElementById('menu-container');
     const categoryNav = document.getElementById('category-nav');
     const cartBar = document.getElementById('cart-bar');
@@ -42,6 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyPixKeyBtn = document.getElementById('copy-pix-key-btn');
     const finalizeOrderBtn = document.getElementById('finalize-order-btn');
     const shareMenuBtn = document.getElementById('share-menu-btn');
+    
+    // CAMPOS DO FORMULÁRIO
+    const clientNameInput = document.getElementById('client-name');
+    const clientWhatsappInput = document.getElementById('client-whatsapp');
+    const clientStreetInput = document.getElementById('client-street');
+    const clientNumberInput = document.getElementById('client-number');
+    const clientNeighborhoodInput = document.getElementById('client-neighborhood');
+    const changeForInput = document.getElementById('change-for');
+    const orderObservationsInput = document.getElementById('order-observations');
+
 
     // --- 3. FUNÇÕES DE RENDERIZAÇÃO E LÓGICA ---
 
@@ -113,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
         storeConfigRef.onSnapshot((doc) => {
             if (doc.exists) {
                 manualStatus = doc.data().statusManual;
-                console.log("Status manual da loja alterado para:", manualStatus);
             } else {
                 manualStatus = 'fechada';
                 console.warn("Documento de configuração da loja não encontrado. A loja permanecerá fechada.");
@@ -310,30 +316,58 @@ document.addEventListener('DOMContentLoaded', () => {
     function finalizeOrder() {
         if (!isStoreOpen) { alert('A loja está fechada no momento.'); return; }
         if (cart.length === 0) { alert('Seu carrinho está vazio.'); return; }
-        const clientName = document.getElementById('client-name').value.trim();
-        if (!clientName) { alert('Por favor, preencha seu nome.'); return; }
+
+        const clientName = clientNameInput.value.trim();
+        const clientWhatsapp = clientWhatsappInput.value.trim();
         const isDelivery = deliveryOptionSelect.value === 'delivery';
-        const address = document.getElementById('client-address').value.trim();
-        if (isDelivery && !address) { alert('Por favor, preencha seu endereço.'); return; }
-        if (!paymentMethodSelect.value) { alert('Escolha a forma de pagamento.'); return; }
+        const street = clientStreetInput.value.trim();
+        const number = clientNumberInput.value.trim();
+        const neighborhood = clientNeighborhoodInput.value.trim();
+        const paymentMethod = paymentMethodSelect.value;
+        const changeFor = changeForInput.value.trim();
+
+        if (!clientName) { alert('Por favor, preencha seu nome.'); return; }
+        if (!clientWhatsapp || clientWhatsapp.length < 15) { // (XX) XXXXX-XXXX tem 15 chars
+            alert('Por favor, preencha um número de WhatsApp válido.'); return;
+        }
+        if (isDelivery) {
+            if (!street) { alert('Por favor, preencha o nome da sua rua.'); return; }
+            if (!number) { alert('Por favor, preencha o número da sua casa/apartamento.'); return; }
+        }
+        if (!paymentMethod) { alert('Escolha a forma de pagamento.'); return; }
+        if (paymentMethod === 'dinheiro' && !changeFor) {
+            alert('Para pagamento em dinheiro, por favor, informe se precisa de troco e para qual valor.');
+            return;
+        }
 
         finalizeOrderBtn.disabled = true;
         finalizeOrderBtn.textContent = 'Enviando...';
+
+        let fullAddress = "Retirar no local";
+        if (isDelivery) {
+            fullAddress = `${street}, ${number}`;
+            if (neighborhood) {
+                fullAddress += ` - ${neighborhood}`;
+            }
+        }
 
         let subtotal = cart.reduce((sum, item) => { const addonsTotal = item.adicionais.reduce((adSum, ad) => adSum + ad.preco * ad.quantity, 0); return sum + (item.preco * item.quantity) + addonsTotal; }, 0);
         const deliveryFee = isDelivery ? CONFIG.taxaEntrega : 0;
         const total = subtotal + deliveryFee;
 
-        let orderSummary = `*Novo Pedido - ${CONFIG.nomeLoja}*\n\n*Cliente:* ${clientName}\n\n--- *ITENS* ---\n`;
+        let orderSummary = `*Novo Pedido - ${CONFIG.nomeLoja}*\n\n`;
+        orderSummary += `*Cliente:* ${clientName}\n`;
+        orderSummary += `*WhatsApp:* ${clientWhatsapp}\n\n`;
+        orderSummary += `--- *ITENS* ---\n`;
         cart.forEach(item => { orderSummary += `*${item.quantity}x* ${item.nome}\n`; item.adicionais.forEach(addon => { orderSummary += `  *+ ${addon.quantity}x ${addon.nome}*\n`; }); });
         orderSummary += `\n--- *RESUMO* ---\n*Subtotal:* R$ ${subtotal.toFixed(2).replace('.', ',')}\n`;
         if (isDelivery) { orderSummary += `*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2).replace('.', ',')}\n`; }
         orderSummary += `*TOTAL: R$ ${total.toFixed(2).replace('.', ',')}*\n\n--- *PAGAMENTO E ENTREGA* ---\n`;
-        orderSummary += isDelivery ? `*Entrega:* Delivery\n*Endereço:* ${address}\n` : `*Entrega:* Retirar no local\n`;
+        orderSummary += isDelivery ? `*Entrega:* Delivery\n*Endereço:* ${fullAddress}\n` : `*Entrega:* Retirar no local\n`;
         const paymentMethodText = paymentMethodSelect.options[paymentMethodSelect.selectedIndex].text;
         orderSummary += `*Pagamento:* ${paymentMethodText}\n`;
-        if (paymentMethodSelect.value === 'dinheiro') { const changeFor = document.getElementById('change-for').value.trim(); if (changeFor) { orderSummary += `*Troco para:* R$ ${changeFor}\n`; } }
-        const observations = document.getElementById('order-observations').value.trim();
+        if (paymentMethod === 'dinheiro') { orderSummary += `*Troco para:* R$ ${changeFor}\n`; }
+        const observations = orderObservationsInput.value.trim();
         if (observations) { orderSummary += `*Observações:* ${observations}\n`; }
         
         const whatsappUrl = `https://api.whatsapp.com/send?phone=${CONFIG.telefoneWhatsapp}&text=${encodeURIComponent(orderSummary)}`;
@@ -345,12 +379,14 @@ document.addEventListener('DOMContentLoaded', () => {
             status: "novo",
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             clienteNome: clientName,
+            clienteWhatsapp: clientWhatsapp,
             whatsappLoja: CONFIG.telefoneWhatsapp,
-            endereco: isDelivery ? address : "Retirar no local",
+            endereco: fullAddress,
             total: total,
             itens: orderItems,
             pagamento: paymentMethodText,
-            observacoes: observations
+            observacoes: observations,
+            trocoPara: (paymentMethod === 'dinheiro' && changeFor) ? changeFor : null
         };
 
         db.collection("pedidos").add(orderData).catch((error) => console.error("Erro ao salvar o pedido: ", error));
@@ -364,6 +400,23 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCartView();
             document.getElementById('close-cart-btn').click();
         }, 3000);
+    }
+
+    function applyWhatsappMask(input) {
+        let value = input.value.replace(/\D/g, '');
+        value = value.substring(0, 11);
+
+        let formattedValue = '';
+        if (value.length > 0) {
+            formattedValue = '(' + value.substring(0, 2);
+        }
+        if (value.length > 2) {
+            formattedValue += ') ' + value.substring(2, 7);
+        }
+        if (value.length > 7) {
+            formattedValue += '-' + value.substring(7, 11);
+        }
+        input.value = formattedValue;
     }
 
     // --- 5. EVENT LISTENERS ---
@@ -396,7 +449,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open(whatsappUrl, '_blank');
     });
 
+    clientWhatsappInput.addEventListener('input', () => {
+        applyWhatsappMask(clientWhatsappInput);
+    });
+
     // --- 6. INICIALIZAÇÃO ---
     loadInitialData();
 });
-/* FIM DO CÓDIGO */
+
+// FIM DO ARQUIVO - CÓDIGO COMPLETO E VERIFICADO

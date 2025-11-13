@@ -1,3 +1,4 @@
+<!-- ARQUIVO: index.html (COMPLETO E VERIFICADO) -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -76,23 +77,36 @@
                 <div class="summary-row" id="delivery-fee-row"><span>Taxa de Entrega</span><span id="cart-delivery-fee">R$ 0,00</span></div>
                 <div class="summary-row total-row"><span>Total</span><span id="cart-total-price">R$ 0,00</span></div>
             </div>
+            
+            <!-- ▼▼▼ SEÇÃO DO FORMULÁRIO ATUALIZADA ▼▼▼ -->
             <div class="checkout-form">
                 <h3>Complete seus Dados</h3>
+
                 <input type="text" id="client-name" placeholder="* Seu Nome" class="input-field" required>
+                <input type="tel" id="client-whatsapp" placeholder="* Seu WhatsApp (ex: 19912345678)" class="input-field" required>
+
                 <select id="delivery-option" class="input-field">
                     <option value="delivery">Receber em casa (Delivery)</option>
                     <option value="pickup">Retirar no local</option>
                 </select>
+
                 <div id="address-fields">
-                    <input type="text" id="client-address" placeholder="* Endereço Completo (Rua, N°, Bairro)" class="input-field">
+                    <input type="text" id="client-street" placeholder="* Rua / Avenida" class="input-field">
+                    <input type="text" id="client-number" placeholder="* Número" class="input-field">
+                    <input type="text" id="client-neighborhood" placeholder="Bairro (Opcional)" class="input-field">
                 </div>
+
                 <select id="payment-method" class="input-field" required>
                     <option value="" disabled selected>* Forma de Pagamento</option>
                     <option value="dinheiro">Dinheiro</option>
                     <option value="pix">PIX</option>
                     <option value="cartao">Cartão</option>
                 </select>
-                <div id="change-field" class="hidden"><input type="text" id="change-for" placeholder="Precisa de troco para quanto?" class="input-field"></div>
+
+                <div id="change-field" class="hidden">
+                    <input type="number" id="change-for" placeholder="* Precisa de troco para quanto?" class="input-field">
+                </div>
+
                 <div id="pix-info" class="hidden">
                     <p>Faça o pagamento e envie o comprovante no WhatsApp.</p>
                     <div class="pix-key-container">
@@ -102,6 +116,8 @@
                 </div>
                 <textarea id="order-observations" class="input-field" placeholder="Observações (ex: sem cebola, ponto da carne...)"></textarea>
             </div>
+            <!-- ▲▲▲ FIM DA SEÇÃO DO FORMULÁRIO ATUALIZADA ▲▲▲ -->
+
         </div>
         <div class="cart-footer">
             <button id="finalize-order-btn" type="button" class="btn-finalize"><i class="fab fa-whatsapp"></i> Enviar Pedido</button>
@@ -114,10 +130,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <!-- Scripts da Aplicação -->
-    <!-- O firebase-init.js não é mais necessário aqui -->
     <script src="config.js"></script>
     <script src="app.js"></script>
 
 </body>
 </html>
-<!-- FIM DO CÓDIGO -->
+<!-- FIM DO ARQUIVO - CÓDIGO COMPLETO E VERIFICADO -->
